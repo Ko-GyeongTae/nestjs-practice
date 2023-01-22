@@ -4,17 +4,17 @@ import { AppService } from './app.service';
 import { ApiController } from './api/api.controller';
 import { UsersModule } from './users/users.module';
 import { ConfigModule } from '@nestjs/config';
+import emailConfig from './config/emailConfig';
+import { validationSchema } from './config/validationSchema';
 
 @Module({
   imports: [
     UsersModule,
     ConfigModule.forRoot({
-      envFilePath:
-        process.env.NODE_ENV === 'production'
-          ? '.production.env'
-          : process.env.NODE_ENV === 'stage'
-          ? '.stage.env'
-          : '.development.env',
+      envFilePath: ['${__dirname}/confing/env/.${process.env.NODE_ENV}.env'],
+      load: [emailConfig],
+      isGlobal: true,
+      validationSchema,
     }),
   ],
   controllers: [AppController, ApiController],
